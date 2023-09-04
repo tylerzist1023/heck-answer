@@ -5,7 +5,7 @@ export default function Login() {
         <div>
             <h2>Login</h2>
 
-            <form method="POST" action="/api/user">
+            <form method="post" action="/api/user/">
                 <label>
                 Username:
                 <input type="text" id="username" name="username" />

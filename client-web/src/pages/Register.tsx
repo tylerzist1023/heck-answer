@@ -5,7 +5,7 @@ export default function Register() {
         <div>
             <h2>Register</h2>
 
-            <form method="POST" action="/api/register">
+            <form method="post" action="/api/user/">
                 <label>
                 Username:
                 <input type="text" id="username" name="username" />
