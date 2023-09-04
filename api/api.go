@@ -6,14 +6,26 @@ func PostUser(username string, password string) {
 	db.AddUser(username, password)
 }
 
-func GetUser(username string) db.User {
-	return db.GetUser(username)
+func GetUserFromId(id int) db.User {
+	return db.GetUserFromId(id)
+}
+
+func GetUserFromUsername(username string) db.User {
+	return db.GetUserFromUsername(username)
+}
+
+func GetUserFromSession(session string) db.User {
+	return db.GetUserFromSession(session)
 }
 
 func PostSession(username string, password string) string {
-	return db.AddSession(username, password)
+	return db.NewSession(username, password)
 }
 
-func GetSession(cookie string) db.Session {
-	return db.GetSession(cookie)
+func GetThreads() []db.Post {
+	return db.GetPostsFromParent(0)
+}
+
+func PostPost(url string, title string, body string) {
+	db.AddPost(url, title, body)
 }

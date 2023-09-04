@@ -3,11 +3,12 @@ package main
 import (
 	api "answer-heck/api"
 	db "answer-heck/db"
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
-	"strings"
+	"strconv"
 )
 
 func serve(w http.ResponseWriter, req *http.Request) {
@@ -30,16 +31,46 @@ func api_user(w http.ResponseWriter, req *http.Request) {
 			api.PostUser(username, password)
 			w.Write([]byte(username))
 			w.Write([]byte(password))
-		}		
+		}
 	} else if req.Method == http.MethodGet {
-		urlPart := strings.Split(req.URL.Path, "/")
-		username := urlPart[3]
+		q, _  := url.ParseQuery(req.URL.RawQuery)
+		var user db.User
+		if q.Has("username") {
+			user = api.GetUserFromUsername(q.Get("username"))
 
-		user := api.GetUser(username)
-		if len(user.Username) == 0 {
-			w.WriteHeader(http.StatusNotFound)
+			userJson, err := json.Marshal(user)
+			if err != nil {
+				log.Fatal(err)
+			}
+			w.Write([]byte(string(userJson)))
+		} else if q.Has("id") {
+			userid, err := strconv.Atoi(q.Get("id"))
+			if err != nil {
+				log.Fatal(err)
+			}
+			user = api.GetUserFromId(userid)
+
+			userJson, err := json.Marshal(user)
+			if err != nil {
+				log.Fatal(err)
+			}
+			w.Write([]byte(string(userJson)))
 		} else {
-			w.Write([]byte(user.Username))
+			cookie, err := req.Cookie("session")
+			if err != nil {
+				if err != http.ErrNoCookie {
+					log.Fatal(err)
+				} else {
+					return
+				}
+			}
+			user = api.GetUserFromSession(cookie.Value)
+
+			userJson, err := json.Marshal(user)
+			if err != nil {
+				log.Fatal(err)
+			}
+			w.Write([]byte(string(userJson)))
 		}
 	}
 }
@@ -52,26 +83,35 @@ func api_session(w http.ResponseWriter, req *http.Request) {
 		if len(username) == 0 || len(password) == 0 {
 			w.WriteHeader(http.StatusNotFound)
 		} else {
-			cookie := api.PostSession(username, password)
-			// fmt.Printf("%s\n", cookie)
-			if len(cookie) == 0 {
+			session := api.PostSession(username, password)
+			if len(session) == 0 {
 				w.WriteHeader(http.StatusNotFound)
 			} else {
-				w.Write([]byte(cookie))
+				w.Write([]byte(session))
 			}
 		}
-	} else if req.Method == http.MethodGet {
-		cookieObject, err := req.Cookie("session")
+	}
+}
+
+// don't sue me meta!!!
+func api_threads(w http.ResponseWriter, req *http.Request) {
+	if req.Method == http.MethodGet {
+		posts := api.GetThreads()
+		postsJson, err := json.Marshal(posts)
 		if err != nil {
-			if err != http.ErrNoCookie {
-				log.Fatal(err)
-			} else {
-				return
-			}
+			log.Fatal(err)
 		}
-		session := api.GetSession(cookieObject.Value)
-		fmt.Printf("username: %s\n", session.Username)
-		w.Write([]byte(session.Username))
+		w.Write([]byte(string(postsJson)))
+	}
+}
+
+func api_post(w http.ResponseWriter, req *http.Request) {
+	if req.Method == http.MethodPost {
+		url := req.FormValue("url")
+		title := req.FormValue("title")
+		body := req.FormValue("body")
+
+		api.PostPost(url, title, body)
 	}
 }
 
@@ -82,9 +122,14 @@ func main() {
 	http.HandleFunc(".", serve)
 	http.HandleFunc("/login", serve)
 	http.HandleFunc("/register", serve)
+	http.HandleFunc("/submit", serve)
+	http.HandleFunc("/post", serve)
 
+	http.HandleFunc("/api/user", api_user)
 	http.HandleFunc("/api/user/", api_user)
 	http.HandleFunc("/api/session/", api_session)
+	http.HandleFunc("/api/threads/", api_threads)
+	http.HandleFunc("/api/post/", api_post)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {

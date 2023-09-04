@@ -12,18 +12,19 @@ import './App.css';
 import Home from './Home';
 import Login from './Login';
 import Register from './Register';
+import Submit from './Submit';
 
 function App() {
     const [username, setUsername] = useState("");
 
     useEffect(() => {
         let text = "";
-        let res = fetch("/api/session/", {
+        let res = fetch("/api/user/", {
             method: "get"
         })
-        .then((r) => r.text())
-        .then((text) => {
-            setUsername(text);
+        .then((r) => r.json())
+        .then((json) => {
+            setUsername(json["username"]);
         });
     }, []);
 
@@ -44,6 +45,9 @@ function App() {
                     <li>
                       <Link to="/register">Register</Link>
                     </li>
+                    <li>
+                      <Link to="/submit">New</Link>
+                    </li>
                   </ul>
                 </nav>
 
@@ -51,6 +55,7 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/submit" element={<Submit />} />
                 </Routes>
               </div>
             </Router>
