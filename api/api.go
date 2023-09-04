@@ -9,3 +9,11 @@ func PostUser(username string, password string) {
 func GetUser(username string) db.User {
 	return db.GetUser(username)
 }
+
+func PostSession(username string, password string) string {
+	return db.AddSession(username, password)
+}
+
+func GetSession(cookie string) db.Session {
+	return db.GetSession(cookie)
+}

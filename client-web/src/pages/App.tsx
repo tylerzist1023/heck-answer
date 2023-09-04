@@ -1,9 +1,11 @@
 import React from 'react';
+import {useState, useEffect} from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
+  Link,
+  useNavigate
 } from "react-router-dom";
 import logo from './logo.svg';
 import './App.css';
@@ -12,9 +14,22 @@ import Login from './Login';
 import Register from './Register';
 
 function App() {
+    const [username, setUsername] = useState("");
+
+    useEffect(() => {
+        let text = "";
+        let res = fetch("/api/session/", {
+            method: "get"
+        })
+        .then((r) => r.text())
+        .then((text) => {
+            setUsername(text);
+        });
+    }, []);
+
     return (
         <div className="App">
-            <h1>Hello</h1>
+            <h1>Hello{username == "" ? "" : ","} {username}</h1>
 
             <Router>
               <div>

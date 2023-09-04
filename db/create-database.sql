@@ -10,3 +10,9 @@ CREATE TABLE USER (
     PRIMARY KEY (`username`)
 );
 
+DROP TABLE IF EXISTS SESSION;
+CREATE TABLE SESSION (
+    cookie VARCHAR(64) NOT NULL,
+    username VARCHAR(64) NOT NULL,
+    PRIMARY KEY (`cookie`)
+);
