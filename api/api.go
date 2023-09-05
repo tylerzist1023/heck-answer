@@ -26,6 +26,13 @@ func GetThreads() []db.Post {
 	return db.GetPostsFromParent(0)
 }
 
-func PostPost(url string, title string, body string) {
-	db.AddPost(url, title, body)
+func PostPost(session string, url string, title string, body string) {
+	user := db.GetUserFromSession(session)
+	if user.Id != 0 {
+		db.AddPost(user.Id, url, title, body)
+	}
+}
+
+func GetPostFromId(id int) db.Post {
+	return db.GetPostFromId(id)
 }

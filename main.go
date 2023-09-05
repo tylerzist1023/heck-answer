@@ -46,7 +46,7 @@ func api_user(w http.ResponseWriter, req *http.Request) {
 		} else if q.Has("id") {
 			userid, err := strconv.Atoi(q.Get("id"))
 			if err != nil {
-				log.Fatal(err)
+				return
 			}
 			user = api.GetUserFromId(userid)
 
@@ -111,7 +111,32 @@ func api_post(w http.ResponseWriter, req *http.Request) {
 		title := req.FormValue("title")
 		body := req.FormValue("body")
 
-		api.PostPost(url, title, body)
+		cookie, err := req.Cookie("session")
+		if err != nil {
+			if err != http.ErrNoCookie {
+				log.Fatal(err)
+			} else {
+				return
+			}
+		}
+
+		api.PostPost(cookie.Value, url, title, body)
+	} else if req.Method == http.MethodGet {
+		q, _  := url.ParseQuery(req.URL.RawQuery)
+		var post db.Post
+		if q.Has("id") {
+			postid, err := strconv.Atoi(q.Get("id"))
+			if err != nil {
+				return
+			}
+			post = api.GetPostFromId(postid)
+
+			postJson, err := json.Marshal(post)
+			if err != nil {
+				log.Fatal(err)
+			}
+			w.Write([]byte(string(postJson)))
+		}
 	}
 }
 

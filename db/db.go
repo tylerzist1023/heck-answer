@@ -35,7 +35,7 @@ func Connect() {
         Passwd: os.Getenv("DBPASS"),
         Net:    "tcp",
         Addr:   "127.0.0.1:3306",
-        DBName: "ANSWERHECK",
+        DBName: "HECKANSWER",
 	}
 
 	var err error
@@ -158,11 +158,24 @@ func GetPostsFromParent(parent int) []Post {
 	return posts
 }
 
-func AddPost(url string, title string, body string) {
-	_, err := database.Exec("INSERT INTO POST (userid, title, url, body, score, parentid) VALUES (?, ?, ?, ?, ?, ?)", 0, title, url, body, 0, 0)
+func AddPost(userid int, url string, title string, body string) {
+	_, err := database.Exec("INSERT INTO POST (userid, title, url, body, score, parentid) VALUES (?, ?, ?, ?, ?, ?)", userid, title, url, body, 0, 0)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func GetPostFromId(id int) Post {
+	var post Post
+
+	row := database.QueryRow("SELECT * FROM POST WHERE id = ?", id)
+	if err := row.Scan(&post.Id, &post.UserId, &post.Title, &post.Url, &post.Body, &post.Score, &post.ParentId); err != nil {
+		if err != sql.ErrNoRows {
+			 log.Fatal(err)
+		}
+	}
+
+	return post
 }
 
 var charSet = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")

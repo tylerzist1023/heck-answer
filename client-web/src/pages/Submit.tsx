@@ -41,6 +41,8 @@ const Submit = () => {
                 <input type="text" id="body" name="body" />
                 </label>
 
+                <br />
+
                 <input type="submit" value="Submit!" />
             </form>
         </div>

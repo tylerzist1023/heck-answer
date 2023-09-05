@@ -13,12 +13,12 @@ import Home from './Home';
 import Login from './Login';
 import Register from './Register';
 import Submit from './Submit';
+import Post from './Post';
 
 function App() {
     const [username, setUsername] = useState("");
 
     useEffect(() => {
-        let text = "";
         let res = fetch("/api/user/", {
             method: "get"
         })
@@ -56,6 +56,7 @@ function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/submit" element={<Submit />} />
+                  <Route path="/post" element={<Post />} />
                 </Routes>
               </div>
             </Router>
