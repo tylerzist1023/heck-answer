@@ -3,7 +3,6 @@ package main
 import (
     api "answer-heck/api"
     db "answer-heck/db"
-    "encoding/json"
     "log"
     "net/http"
     "net/url"
@@ -34,27 +33,15 @@ func api_user(w http.ResponseWriter, req *http.Request) {
         }
     } else if req.Method == http.MethodGet {
         q, _  := url.ParseQuery(req.URL.RawQuery)
-        var user db.User
         if q.Has("username") {
-            user = api.GetUserFromUsername(q.Get("username"))
-
-            userJson, err := json.Marshal(user)
-            if err != nil {
-                log.Fatal(err)
-            }
-            w.Write([]byte(string(userJson)))
+            w.Write([]byte(api.GetUserFromUsername(q.Get("username"))))
         } else if q.Has("id") {
             userid, err := strconv.Atoi(q.Get("id"))
             if err != nil {
                 return
             }
-            user = api.GetUserFromId(userid)
 
-            userJson, err := json.Marshal(user)
-            if err != nil {
-                log.Fatal(err)
-            }
-            w.Write([]byte(string(userJson)))
+            w.Write([]byte(api.GetUserFromId(userid)))
         } else {
             cookie, err := req.Cookie("session")
             if err != nil {
@@ -64,13 +51,7 @@ func api_user(w http.ResponseWriter, req *http.Request) {
                     return
                 }
             }
-            user = api.GetUserFromSession(cookie.Value)
-
-            userJson, err := json.Marshal(user)
-            if err != nil {
-                log.Fatal(err)
-            }
-            w.Write([]byte(string(userJson)))
+            w.Write([]byte(api.GetUserFromSession(cookie.Value)))
         }
     }
 }
@@ -96,12 +77,7 @@ func api_session(w http.ResponseWriter, req *http.Request) {
 // don't sue me meta!!!
 func api_threads(w http.ResponseWriter, req *http.Request) {
     if req.Method == http.MethodGet {
-        posts := api.GetThreads()
-        postsJson, err := json.Marshal(posts)
-        if err != nil {
-            log.Fatal(err)
-        }
-        w.Write([]byte(string(postsJson)))
+        w.Write([]byte(api.GetThreads()))
     }
 }
 
@@ -127,19 +103,12 @@ func api_post(w http.ResponseWriter, req *http.Request) {
         api.PostPost(cookie.Value, url, title, body, parentid)
     } else if req.Method == http.MethodGet {
         q, _  := url.ParseQuery(req.URL.RawQuery)
-        var post db.Post
         if q.Has("id") {
             postid, err := strconv.Atoi(q.Get("id"))
             if err != nil {
                 return
             }
-            post = api.GetPostFromId(postid)
-
-            postJson, err := json.Marshal(post)
-            if err != nil {
-                log.Fatal(err)
-            }
-            w.Write([]byte(string(postJson)))
+            w.Write([]byte(api.GetPostFromId(postid)))
         }
     }
 }
@@ -152,13 +121,7 @@ func api_children(w http.ResponseWriter, req *http.Request) {
             if err != nil {
                 return
             }
-            posts := api.GetChildrenFromParentId(parentid)
-
-            postsJson, err := json.Marshal(posts)
-            if err != nil {
-                log.Fatal(err)
-            }
-            w.Write([]byte(string(postsJson)))
+            w.Write([]byte(api.GetChildrenFromParentId(parentid)))
         }
     }
 }
