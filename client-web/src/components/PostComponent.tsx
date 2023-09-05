@@ -13,13 +13,16 @@ interface PostProps {
 
 const PostComponent: React.FC<PostProps> = (props: PostProps) => {
     return (
-        <p>
-        <a target='_blank' href={props.url}>{props.title}</a> by {props.author}
-        <br/>
-        <p>
-        {props.body}
-        </p>
-        </p>
+        <div>
+            <a target='_blank' href={props.url}>{props.title}</a> by <Link to={"/user?id="+props.author}>{props.author}</Link>
+
+            <br/>
+            <Link reloadDocument={true} to={"/post?id="+props.id}>View Thread</Link>
+            <div className="display-linebreak">
+            {props.body}
+            </div>
+            <br/>
+        </div>
     );
 }
 

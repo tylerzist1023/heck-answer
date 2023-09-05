@@ -4,7 +4,7 @@ import ThreadComponent from '../components/ThreadComponent';
 
 export default function Home() {
 
-    const [threads, setThreads] = useState([])
+    const [threads, setThreads] = useState([]);
 
     useEffect(() => {
         let res = fetch("/api/threads/", {

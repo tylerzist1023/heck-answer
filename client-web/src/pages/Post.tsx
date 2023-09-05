@@ -1,6 +1,7 @@
 import React from 'react';
 import {useState, useEffect} from 'react';
 import PostComponent from '../components/PostComponent';
+import ReplyComponent from '../components/ReplyComponent';
 
 const Post = () => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -22,7 +23,10 @@ const Post = () => {
         return <div></div>;
     } else {
         return (
-            <PostComponent id={postid} title={post["title"]} author={post["userid"]} body={post["body"]} url={post["url"]}/>
+            <div>
+                <PostComponent id={postid} title={post["title"]} author={post["userid"]} body={post["body"]} url={post["url"]}/>
+                <ReplyComponent parentid={postid}/>
+            </div>
         );
     }
 };

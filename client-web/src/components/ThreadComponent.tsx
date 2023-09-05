@@ -13,9 +13,9 @@ interface ThreadProps {
 const ThreadComponent: React.FC<ThreadProps> = (props: ThreadProps) => {
     return (
         <p>
-        <a target='_blank' href={props.url}>{props.title}</a> by {props.author}
+        <a target='_blank' href={props.url}>{props.title}</a> by <Link to={"/user?id="+props.author}>{props.author}</Link>
         <br/>
-        <Link to={"post?id="+props.id}>View Thread</Link>
+        <Link to={"/post?id="+props.id}>View Thread</Link>
         </p>
     );
 }

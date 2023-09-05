@@ -14,6 +14,7 @@ import Login from './Login';
 import Register from './Register';
 import Submit from './Submit';
 import Post from './Post';
+import User from './User';
 
 function App() {
     const [username, setUsername] = useState("");
@@ -57,6 +58,7 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/submit" element={<Submit />} />
                   <Route path="/post" element={<Post />} />
+                  <Route path="/user" element={<User />} />
                 </Routes>
               </div>
             </Router>
