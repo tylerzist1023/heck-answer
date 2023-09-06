@@ -10,8 +10,6 @@ interface ReplyProps {
 const ReplyComponent: React.FC<ReplyProps> = (props: ReplyProps) => {
     const navigate = useNavigate();
 
-    const [children, setChildren] = useState([]);
-
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -25,16 +23,6 @@ const ReplyComponent: React.FC<ReplyProps> = (props: ReplyProps) => {
             window.location.reload();
         });
     };
-
-    useEffect(() => {
-        let res = fetch("/api/children?id="+props.parentid, {
-            method: "get"
-        })
-        .then((r) => r.json())
-        .then((json) => {
-            setChildren(json);
-        });
-    }, []);
 
     return (
         <div>
@@ -50,16 +38,6 @@ const ReplyComponent: React.FC<ReplyProps> = (props: ReplyProps) => {
 
                 <input type="submit" value="Reply!" />
             </form>
-
-            {
-                children.map((x) => { return (<PostComponent 
-                    id={x["id"]}
-                    title={x["title"]}
-                    author={x["userid"]}
-                    url={x["url"]}
-                    body={x["body"]}
-                />);})
-            }
         </div>
     );
 }

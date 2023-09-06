@@ -1,7 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
+import * as bcrypt from 'bcryptjs';
 
-const Register = () => {
+interface RegisterProps {
+    refetchUser: () => void;
+}
+
+const Register: React.FC<RegisterProps> = (props: RegisterProps) => {
     const navigate = useNavigate();
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -9,10 +14,17 @@ const Register = () => {
 
         let formData = new FormData(e.currentTarget);
 
+        var password_plain = formData.get("password") as string;
+
+        var salt = bcrypt.genSaltSync(10);
+        var password_hash = bcrypt.hashSync(formData.get("password") as string);
+        formData.set("password", password_hash);
+
         let res = fetch("/api/user/", {
             body: formData,
             method: "post"
         }).finally(() => {
+            formData.set("password", password_plain);
             let res = fetch("/api/session/", {
                 body: formData,
                 method: "post"
@@ -21,9 +33,11 @@ const Register = () => {
             .then((text) => {
                 document.cookie = "session="+text;
                 navigate('/');
-                window.location.reload();
+                props.refetchUser();
             });
         });
+
+        
     };
 
     return (
@@ -38,7 +52,7 @@ const Register = () => {
                 <br />
                 <label>
                 Password:
-                <input type="text" id="password" name="password" />
+                <input type="password" id="password" name="password" />
                 </label>
                 <br />
                 <input type="submit" value="Register!" />

@@ -17,21 +17,23 @@ import Post from './Post';
 import User from './User';
 
 function App() {
-    const [username, setUsername] = useState("");
+    const [user, setUser] = useState();
 
-    useEffect(() => {
+    const refetchUser = () => {
         let res = fetch("/api/user/", {
             method: "get"
         })
         .then((r) => r.json())
         .then((json) => {
-            setUsername(json["username"]);
+            setUser(json);
         });
-    }, []);
+    };
+
+    useEffect(refetchUser, []);
 
     return (
         <div className="App">
-            <h1>Hello{username == "" ? "" : ","} {username}</h1>
+            <h1>Hello{user == undefined ? "" : ", "+user["username"]}</h1>
 
             <Router>
               <div>
@@ -54,8 +56,8 @@ function App() {
 
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
+                  <Route path="/login" element={<Login refetchUser={refetchUser} />} />
+                  <Route path="/register" element={<Register refetchUser={refetchUser} />} />
                   <Route path="/submit" element={<Submit />} />
                   <Route path="/post" element={<Post />} />
                   <Route path="/user" element={<User />} />

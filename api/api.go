@@ -14,8 +14,8 @@ func getJson(obj any) string {
     return string(objJson)
 }
 
-func PostUser(username string, password string) {
-    db.AddUser(username, password)
+func PostUser(username string, passwordHash string) {
+    db.AddUser(username, passwordHash)
 }
 
 func GetUserFromId(id int) string {

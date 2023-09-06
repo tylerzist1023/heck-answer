@@ -1,13 +1,14 @@
 package db
 
 import (
-    "database/sql"
-    "log"
-    "os"
-    "fmt"
-    "github.com/go-sql-driver/mysql"
-    "math/rand"
-    "time"
+	"database/sql"
+	"fmt"
+	"log"
+	"math/rand"
+	"os"
+	"time"
+	"github.com/go-sql-driver/mysql"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var database *sql.DB
@@ -119,11 +120,10 @@ func NewSession(username string, password string) string {
     }
 
     // check if password matches
-    if user.password != password {
-        return ""
+    err := bcrypt.CompareHashAndPassword([]byte(user.password), []byte(password))
+    if err != nil {
+    	return ""
     }
-
-    var err error
 
     session := generateSessionCookie(64)
     // delete the previous session

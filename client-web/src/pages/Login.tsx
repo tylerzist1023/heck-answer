@@ -1,7 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-const Login = () => {
+interface LoginProps {
+    refetchUser: () => void;
+}
+
+const Login: React.FC<LoginProps> = (props: LoginProps) => {
     const navigate = useNavigate();
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -10,14 +14,14 @@ const Login = () => {
         let formData = new FormData(e.currentTarget);
 
         let res = fetch("/api/session/", {
-            body: formData,
-            method: "post"
+                body: formData,
+                method: "post"
         })
         .then((r) => r.text())
         .then((text) => {
             document.cookie = "session="+text;
             navigate('/');
-            window.location.reload();
+            props.refetchUser();
         });
     };
 
@@ -33,7 +37,7 @@ const Login = () => {
                 <br />
                 <label>
                 Password:
-                <input type="text" id="password" name="password" />
+                <input type="password" id="password" name="password" />
                 </label>
                 <br />
                 <input type="submit" value="Login!" />
