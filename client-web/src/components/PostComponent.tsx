@@ -13,7 +13,7 @@ interface PostProps {
 
 const PostComponent: React.FC<PostProps> = (props: PostProps) => {
     return (
-        <div>
+        <div className='post'>
             <a target='_blank' href={props.url}>{props.title}</a> by <Link to={"/user?id="+props.author}>{props.author}</Link>
 
             <br/>

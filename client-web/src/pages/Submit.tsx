@@ -38,7 +38,7 @@ const Submit = () => {
 
                 <label>
                 Body:
-                <textarea id="body" name="body"></textarea>
+                <textarea id="body" name="body" rows={10} cols={100}></textarea>
                 </label>
 
                 <br />

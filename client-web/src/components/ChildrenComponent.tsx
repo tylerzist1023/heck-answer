@@ -19,18 +19,23 @@ const ChildrenComponent: React.FC<ChildrenProps> = (props: ChildrenProps) => {
                     var grandchildren = props.children.filter((e:any,i:number,a:any) => {return e["parentid"]==x["id"] })
 
                     return (
-                        <div style={{marginLeft: 30+'px'} }>
-                            <PostComponent
-                                id={x["id"]}
-                                title={x["title"]}
-                                author={x["userid"]}
-                                url={x["url"]}
-                                body={x["body"]}
-                            />
+                        <div>
+                            <div style={{marginLeft: 30+'px'} }>
+                                <PostComponent
+                                    id={x["id"]}
+                                    title={x["title"]}
+                                    author={x["userid"]}
+                                    url={x["url"]}
+                                    body={x["body"]}
+                                />
+                                {
+                                    grandchildren.length > 0 ? 
+                                        <ChildrenComponent  parentid={x["id"]} children={props.children} indentation={props.indentation+1}/> : 
+                                        <span></span>
+                                }
+                            </div>
                             {
-                                grandchildren.length > 0 ? 
-                                    <ChildrenComponent parentid={x["id"]} children={props.children} indentation={props.indentation+1}/> : 
-                                    <br/>
+                                props.indentation==0 ? <hr/> : <span></span>
                             }
                         </div>
                     );

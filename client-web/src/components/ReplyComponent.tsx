@@ -5,6 +5,7 @@ import PostComponent from './PostComponent';
 
 interface ReplyProps {
     parentid: number;
+    refetchChildren: () => void;
 }
 
 const ReplyComponent: React.FC<ReplyProps> = (props: ReplyProps) => {
@@ -20,7 +21,7 @@ const ReplyComponent: React.FC<ReplyProps> = (props: ReplyProps) => {
             body: formData,
             method: "post"
         }).finally(() => {
-            window.location.reload();
+            props.refetchChildren();
         });
     };
 
@@ -31,7 +32,7 @@ const ReplyComponent: React.FC<ReplyProps> = (props: ReplyProps) => {
 
                 <label>
                 Reply:
-                <textarea id="body" name="body"></textarea>
+                <textarea id="body" name="body" rows={10} cols={100}></textarea>
                 </label>
 
                 <br />

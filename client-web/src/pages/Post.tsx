@@ -12,7 +12,11 @@ const Post = () => {
 
     const [children, setChildren] = useState([]);
 
-    useEffect(() => {
+    const rerender = () => {};
+
+    const refetchChildren = () => {
+        console.log("post");
+
         let res = fetch("/api/post?id="+postid, {
             method: "get"
         })
@@ -30,15 +34,17 @@ const Post = () => {
                     setChildren(json);
                 }
         );
-    }, [postid]);
+    };
     
+    useEffect(refetchChildren, [postid])
+
     if(post == undefined) {
         return <div></div>;
     } else {
         return (
             <div>
                 <PostComponent id={postid} title={post["title"]} author={post["userid"]} body={post["body"]} url={post["url"]}/>
-                <ReplyComponent parentid={postid}/>
+                <ReplyComponent parentid={postid} refetchChildren={refetchChildren}/>
 
                 <ChildrenComponent parentid={postid} children={children} indentation={0} />
             </div>
