@@ -8,7 +8,7 @@ const User = () => {
     const [user, setUser] = useState();
 
     useEffect(() => {
-        let res = fetch("/api/user?id="+userid, {
+        let res = fetch("/api/user/"+userid, {
             method: "get"
         })
             .then((r) => r.json())

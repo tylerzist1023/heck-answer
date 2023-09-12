@@ -17,7 +17,7 @@ const ReplyComponent: React.FC<ReplyProps> = (props: ReplyProps) => {
         let formData = new FormData(e.currentTarget);
         formData.append("parentid", props.parentid.toString())
 
-        let res = fetch("/api/post/", {
+        let res = fetch("/api/post/"+props.parentid, {
             body: formData,
             method: "post"
         }).finally(() => {

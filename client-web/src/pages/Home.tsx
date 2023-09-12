@@ -7,7 +7,7 @@ export default function Home() {
     const [threads, setThreads] = useState([]);
 
     useEffect(() => {
-        let res = fetch("/api/threads/", {
+        let res = fetch("/api/threads", {
             method: "get"
         })
         .then((r) => r.json())

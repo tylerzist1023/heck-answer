@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Link
 } from "react-router-dom";
@@ -10,7 +10,36 @@ interface ChildrenProps {
     indentation: number;
 }
 
+interface HiddenType {
+    [id: string]: boolean;
+}
+
 const ChildrenComponent: React.FC<ChildrenProps> = (props: ChildrenProps) => {
+    const [hidden, setHidden] = useState({} as HiddenType);
+
+    const toggleHidden = (e: any, id: string) => {
+        e.preventDefault();
+
+        if(hidden[id] == undefined)
+        {
+            var newHidden = {...hidden, [id]: true};
+            setHidden(newHidden);
+        }
+        else
+        {
+            var newHidden = {...hidden};
+            if(hidden[id] == false)
+            {
+                newHidden[id] = true;
+            }
+            else
+            {
+                newHidden[id] = false;
+            }
+            setHidden(newHidden);
+        }
+    }
+
     return (
         <div>
             {
@@ -21,22 +50,26 @@ const ChildrenComponent: React.FC<ChildrenProps> = (props: ChildrenProps) => {
                     return (
                         <div>
                             <div style={{marginLeft: 30+'px'} }>
-                                <PostComponent
-                                    id={x["id"]}
-                                    title={x["title"]}
-                                    author={x["userid"]}
-                                    url={x["url"]}
-                                    body={x["body"]}
-                                />
-                                {
-                                    grandchildren.length > 0 ? 
-                                        <ChildrenComponent  parentid={x["id"]} children={props.children} indentation={props.indentation+1}/> : 
-                                        <span></span>
-                                }
-                            </div>
+                                <button onClick={(e: any) => toggleHidden(e, x["id"] as string)}>Hide or Show</button>
                             {
-                                props.indentation==0 ? <hr/> : <span></span>
+                                hidden[x["id"] as string]==true ? <span></span> : 
+                                    <div>
+                                        <PostComponent
+                                            id={x["id"]}
+                                            title={x["title"]}
+                                            author={x["userid"]}
+                                            url={x["url"]}
+                                            body={x["body"]}
+                                        />
+                                        {
+                                            grandchildren.length > 0 ? 
+                                                <ChildrenComponent  parentid={x["id"]} children={props.children} indentation={props.indentation+1}/> : 
+                                                <span></span>
+                                        }
+                                    </div>
                             }
+                            </div>
+                            { props.indentation==0 ? <hr/> : <span></span> }
                         </div>
                     );
                 })

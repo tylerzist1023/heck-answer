@@ -13,13 +13,12 @@ const Login: React.FC<LoginProps> = (props: LoginProps) => {
 
         let formData = new FormData(e.currentTarget);
 
-        let res = fetch("/api/session/", {
+        let res = fetch("/api/session", {
                 body: formData,
                 method: "post"
         })
         .then((r) => r.text())
         .then((text) => {
-            document.cookie = "session="+text;
             navigate('/');
             props.refetchUser();
         });

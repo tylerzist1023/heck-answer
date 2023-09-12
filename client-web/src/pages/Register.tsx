@@ -20,18 +20,18 @@ const Register: React.FC<RegisterProps> = (props: RegisterProps) => {
         var password_hash = bcrypt.hashSync(formData.get("password") as string);
         formData.set("password", password_hash);
 
-        let res = fetch("/api/user/", {
+        let res = fetch("/api/user", {
             body: formData,
             method: "post"
         }).finally(() => {
             formData.set("password", password_plain);
-            let res = fetch("/api/session/", {
+            let res = fetch("/api/session", {
                 body: formData,
                 method: "post"
             })
             .then((r) => r.text())
             .then((text) => {
-                document.cookie = "session="+text;
+                // document.cookie = "session="+text;
                 navigate('/');
                 props.refetchUser();
             });

@@ -15,9 +15,7 @@ const Post = () => {
     const rerender = () => {};
 
     const refetchChildren = () => {
-        console.log("post");
-
-        let res = fetch("/api/post?id="+postid, {
+        let res = fetch("/api/post/"+postid, {
             method: "get"
         })
             .then((r) => r.json())
@@ -26,7 +24,7 @@ const Post = () => {
                 }
         );
 
-        let res2 = fetch("/api/children?id="+postid, {
+        let res2 = fetch("/api/post/"+postid+"/children", {
             method: "get"
         })
             .then((r) => r.json())

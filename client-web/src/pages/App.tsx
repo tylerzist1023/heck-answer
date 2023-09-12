@@ -20,7 +20,7 @@ function App() {
     const [user, setUser] = useState();
 
     const refetchUser = () => {
-        let res = fetch("/api/user/", {
+        let res = fetch("/api/user", {
             method: "get"
         })
         .then((r) => r.json())
