@@ -31,7 +31,6 @@ const Register: React.FC<RegisterProps> = (props: RegisterProps) => {
             })
             .then((r) => r.text())
             .then((text) => {
-                // document.cookie = "session="+text;
                 navigate('/');
                 props.refetchUser();
             });

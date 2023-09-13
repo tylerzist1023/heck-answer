@@ -49,6 +49,11 @@ hr {
   white-space: pre-line;
 }
 
+.post-child {
+    border-radius: 7px;
+    border: 2px solid darkgray;
+}
+
 /*.App-link {
   color: #61dafb;
 }*/

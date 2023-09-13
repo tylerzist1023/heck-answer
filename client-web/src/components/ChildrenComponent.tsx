@@ -49,7 +49,7 @@ const ChildrenComponent: React.FC<ChildrenProps> = (props: ChildrenProps) => {
 
                     return (
                         <div>
-                            <div style={{marginLeft: 30+'px'} }>
+                            <div className='post-child' style={{marginLeft: 30+'px'} }>
                                 <button onClick={(e: any) => toggleHidden(e, x["id"] as string)}>Hide or Show</button>
                             {
                                 hidden[x["id"] as string]==true ? <span></span> : 
