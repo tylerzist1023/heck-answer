@@ -44,7 +44,7 @@ const Post = () => {
                 <PostComponent id={postid} title={post["title"]} author={post["userid"]} body={post["body"]} url={post["url"]}/>
                 <ReplyComponent parentid={postid} refetchChildren={refetchChildren}/>
 
-                <ChildrenComponent parentid={postid} children={children} indentation={0} />
+                <ChildrenComponent parentid={postid} children={children} indentation={0} limit={10} />
             </div>
         );
     }

@@ -3,11 +3,13 @@ import {
   Link
 } from "react-router-dom";
 import PostComponent from './PostComponent';
+import ContinueChildrenComponent from './ContinueChildrenComponent';
 
 interface ChildrenProps {
     parentid: number;
     children: any;
     indentation: number;
+    limit: number;
 }
 
 interface HiddenType {
@@ -54,18 +56,24 @@ const ChildrenComponent: React.FC<ChildrenProps> = (props: ChildrenProps) => {
                             {
                                 hidden[x["id"] as string]==true ? <span></span> : 
                                     <div>
-                                        <PostComponent
-                                            id={x["id"]}
-                                            title={x["title"]}
-                                            author={x["userid"]}
-                                            url={x["url"]}
-                                            body={x["body"]}
-                                        />
                                         {
-                                            grandchildren.length > 0 ? 
-                                                <ChildrenComponent  parentid={x["id"]} children={props.children} indentation={props.indentation+1}/> : 
-                                                <span></span>
+                                            props.indentation+1 < props.limit ? 
+                                                <span><PostComponent
+                                                    id={x["id"]}
+                                                    title={x["title"]}
+                                                    author={x["userid"]}
+                                                    url={x["url"]}
+                                                    body={x["body"]}
+                                                />
+                                                {
+                                                    grandchildren.length > 0 ? 
+                                                        <ChildrenComponent  parentid={x["id"]} children={props.children} indentation={props.indentation+1} limit={props.limit}/> : 
+                                                        <span></span>
+                                                }</span> 
+                                            : 
+                                                <ContinueChildrenComponent parentid={x["id"]} indentation={props.indentation+1} limit={props.limit}/>
                                         }
+                                        
                                     </div>
                             }
                             </div>

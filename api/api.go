@@ -7,7 +7,7 @@ import (
 )
 
 func getJson(obj any) string {
-	objJson, err := json.Marshal(obj)
+    objJson, err := json.Marshal(obj)
     if err != nil {
         log.Fatal(err)
     }
@@ -40,17 +40,21 @@ func GetThreads() string {
 
 func GetChildrenFromParentId(parentid int) string {
     var children = make([]db.Post, 0, 8)
-    children = append(children, getChildrenFromParentId(parentid)...)
+    children = append(children, getChildrenFromParentId(parentid, 0)...)
     return getJson(children)
 }
 
-func getChildrenFromParentId(parentid int) []db.Post {
+func getChildrenFromParentId(parentid int, depth int) []db.Post {
     var children = make([]db.Post, 0, 8)
 
     var first_decendants = db.GetPostsFromParent(parentid)
     for _,v := range(first_decendants) {
         children = append(children, v)
-        children = append(children, getChildrenFromParentId(v.Id)...)
+        children_of_parentid := getChildrenFromParentId(v.Id, depth+1)
+        children = append(children, children_of_parentid...)
+        if depth+1 >= 10 {
+            break
+        }
     }
     return children
 }

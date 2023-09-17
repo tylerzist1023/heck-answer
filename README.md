@@ -1,7 +1,5 @@
 ## TODO
-
 - Thread filters, sorting, search, and pagination
-- Children recursion limits
 - Post voting
 - View a user's threads/posts/votes
 - Error handling
