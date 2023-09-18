@@ -1,7 +1,8 @@
 ## TODO
 - Thread filters, sorting, search, and pagination
-- Post voting
 - View a user's threads/posts/votes
+- User post editing and deleting
+- Moderators
 - Error handling
 - Proper user authentication
 - Logout

@@ -9,7 +9,7 @@ const Submit = () => {
 
         let formData = new FormData(e.currentTarget);
 
-        let res = fetch("/api/post/", {
+        let res = fetch("/api/post", {
             body: formData,
             method: "post"
         }).finally(() => {

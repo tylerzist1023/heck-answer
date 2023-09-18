@@ -30,6 +30,13 @@ type Post struct {
     ParentId int    `json:"parentid"`
 }
 
+type Vote struct {
+	Id int          `json:"id"`
+    UserId string   `json:"userid"`
+    PostId int    	`json:"postid"`
+    Value int		`json:"value"`
+}
+
 func Connect() {
     cfg := mysql.Config {
         User:   os.Getenv("DBUSER"),
@@ -176,6 +183,47 @@ func GetPostFromId(id int) Post {
     }
 
     return post
+}
+
+func VotePost(userid int, postid int, value int) Vote {
+	var vote Vote
+
+	row := database.QueryRow("SELECT * FROM VOTE WHERE userid = ? AND postid = ?", userid, postid)
+    if err := row.Scan(&vote.Id, &vote.UserId, &vote.PostId, &vote.Value); err != nil {
+        if err != sql.ErrNoRows {
+             log.Fatal(err)
+        }
+
+        _, err = database.Exec("INSERT INTO VOTE (userid, postid, value) VALUES (?, ?, ?)", userid, postid, value)
+	    if err != nil {
+	        log.Fatal(err)
+	    }
+    } else {
+    	_, err = database.Exec("UPDATE VOTE SET value = ? WHERE postid = ? AND userid = ?", value, postid, userid)
+	    if err != nil {
+	        if err != sql.ErrNoRows {
+	             log.Fatal(err)
+	        }
+	    }
+    }
+
+    return vote
+}
+
+func DeleteVote(userid int, postid int) {
+	var vote Vote
+
+	row := database.QueryRow("SELECT * FROM VOTE WHERE postid = ? AND userid = ?", postid, userid)
+	if err := row.Scan(&vote.Id, &vote.UserId, &vote.PostId, &vote.Value); err != nil {
+        if err != sql.ErrNoRows {
+             log.Fatal(err)
+        }
+        return
+    }
+    _, err := database.Exec("DELETE FROM VOTE WHERE postid = ? AND userid = ?", postid, userid)
+    if err != nil {
+        log.Fatal(err)
+    }
 }
 
 var charSet = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")

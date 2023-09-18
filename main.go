@@ -151,6 +151,66 @@ func GetPostChildren(w http.ResponseWriter, req *http.Request) {
     w.Write([]byte(api.GetChildrenFromParentId(postIdInteger)))
 }
 
+func PostPostVoteLike(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+    postId := vars["post_id"]
+    postIdInteger, err := strconv.Atoi(postId)
+    if err != nil {
+        return
+    }
+
+	cookie, err := req.Cookie("session")
+    if err != nil {
+        if err != http.ErrNoCookie {
+            log.Fatal(err)
+        } else {
+            return
+        }
+    }
+
+    api.PostPostVote(cookie.Value, postIdInteger, 1)
+}
+
+func PostPostVoteDislike(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+    postId := vars["post_id"]
+    postIdInteger, err := strconv.Atoi(postId)
+    if err != nil {
+        return
+    }
+
+	cookie, err := req.Cookie("session")
+    if err != nil {
+        if err != http.ErrNoCookie {
+            log.Fatal(err)
+        } else {
+            return
+        }
+    }
+
+    api.PostPostVote(cookie.Value, postIdInteger, -1)
+}
+
+func DeletePostVote(w http.ResponseWriter, req *http.Request) {
+	vars := mux.Vars(req)
+    postId := vars["post_id"]
+    postIdInteger, err := strconv.Atoi(postId)
+    if err != nil {
+        return
+    }
+
+	cookie, err := req.Cookie("session")
+    if err != nil {
+        if err != http.ErrNoCookie {
+            log.Fatal(err)
+        } else {
+            return
+        }
+    }
+
+    api.DeletePostVote(cookie.Value, postIdInteger)
+}
+
 func main() {
     db.Connect();
 
@@ -172,6 +232,9 @@ func main() {
     r.HandleFunc("/api/post/{post_id}", PostReply).Methods("POST")
     r.HandleFunc("/api/threads", GetThreads).Methods("GET")
     r.HandleFunc("/api/post/{post_id}/children", GetPostChildren).Methods("GET")
+    r.HandleFunc("/api/post/{post_id}/vote/like", PostPostVoteLike).Methods("POST")
+    r.HandleFunc("/api/post/{post_id}/vote/dislike", PostPostVoteDislike).Methods("POST")
+    r.HandleFunc("/api/post/{post_id}/vote", DeletePostVote).Methods("DELETE")
 
     r.PathPrefix("/").Handler(http.FileServer(http.Dir("./client-web/build")))
 

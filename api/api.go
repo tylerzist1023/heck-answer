@@ -69,3 +69,15 @@ func PostPost(session string, url string, title string, body string, parentid in
 func GetPostFromId(id int) string {
     return getJson(db.GetPostFromId(id))
 }
+
+func PostPostVote(session string, postid int, value int) string {
+	user := db.GetUserFromSession(session)
+
+	return getJson(db.VotePost(user.Id, postid, value))
+}
+
+func DeletePostVote(session string, postid int) {
+	user := db.GetUserFromSession(session)
+
+	db.DeleteVote(user.Id, postid)
+}

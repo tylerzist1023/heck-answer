@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Link
 } from "react-router-dom";
+import VoteComponent from './VoteComponent';
 
 interface PostProps {
     id: number;
@@ -16,12 +17,12 @@ const PostComponent: React.FC<PostProps> = (props: PostProps) => {
         <div className='post'>
             <a target='_blank' href={props.url}>{props.title}</a> by <Link to={"/user?id="+props.author}>{props.author}</Link>
 
-            <br/>
+            <VoteComponent postid={props.id} />
+
             <Link reloadDocument={true} to={"/post?id="+props.id}>View Thread</Link>
             <div className="display-linebreak">
             {props.body}
             </div>
-            <br/>
         </div>
     );
 }

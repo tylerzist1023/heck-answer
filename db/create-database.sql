@@ -23,3 +23,12 @@ CREATE TABLE POST (
     parentid INT NOT NULL,
     PRIMARY KEY (`id`)
 );
+
+DROP TABLE IF EXISTS VOTE;
+CREATE TABLE VOTE (
+    id INT NOT NULL AUTO_INCREMENT,
+    userid INT NOT NULL,
+    postid INT NOT NULL,
+    value INT NOT NULL,
+    PRIMARY KEY (`id`)
+);
